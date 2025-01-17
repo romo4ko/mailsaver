@@ -1,11 +1,9 @@
-
 import 'dart:math';
 
 import 'package:mailsaver/Models/Email.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class SQLiteHelper {
-
   Database? _database;
 
   Future<Database> get database async {
@@ -30,7 +28,7 @@ class SQLiteHelper {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute(''' 
+    await db.execute('''
         CREATE TABLE IF NOT EXISTS emails(
             id INTEGER PRIMARY KEY,
             value TEXT,
@@ -41,7 +39,6 @@ class SQLiteHelper {
   }
 
   Future<Email> insert(Email email) async {
-
     final db = await database;
 
     db.insert(
@@ -54,7 +51,6 @@ class SQLiteHelper {
   }
 
   Future<List<Email>> getAll() async {
-
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query('emails');
@@ -69,13 +65,32 @@ class SQLiteHelper {
     });
   }
 
+  Future<int> update(Email email) async {
+    Database db = await database;
+    return await db.update(
+      'emails',
+      email.toMap(),
+      where: 'id = ?',
+      whereArgs: [email.id],
+    );
+  }
+
+  Future<int> delete(int id) async {
+    Database db = await database;
+    return await db.delete(
+      'emails',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<List<Email>> batchInsert() async {
     final db = await database;
     final batch = db.batch();
     final Random random = Random();
     final List<Email> userList = List.generate(
       1000,
-          (index) => Email(
+      (index) => Email(
         id: index + 1,
         value: 'user$index@example.com',
         categoryId: 1,
@@ -94,8 +109,13 @@ class SQLiteHelper {
   }
 }
 
-
-
-
-
-
+extension on Email {
+  Email fromMap(Map<String, dynamic> map) {
+    return Email(
+      id: map['id']?.toInt(),
+      value: map['value'] ?? '',
+      categoryId: map['categoryId'] ?? '',
+      createdAt: map['createdAt'] ?? '',
+    );
+  }
+}

@@ -2,16 +2,16 @@ import 'package:flutter/foundation.dart' show immutable;
 
 @immutable
 class Email {
-  final int id;
+  final int? id;
   final String value;
   final int? categoryId;
-  final String createdAt;
+  final DateTime? createdAt;
 
   const Email({
-    required this.id,
+    this.id,
     required this.value,
-    required this.categoryId,
-    required this.createdAt,
+    this.categoryId,
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {

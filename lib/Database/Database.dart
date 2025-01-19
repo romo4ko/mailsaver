@@ -53,7 +53,10 @@ class SQLiteHelper {
   Future<List<Email>> getAll() async {
     final db = await database;
 
-    final List<Map<String, dynamic>> maps = await db.query('emails');
+    final List<Map<String, dynamic>> maps = await db.query(
+        'emails',
+        orderBy: 'createdAt'
+    );
 
     return List.generate(maps.length, (index) {
       return Email(
@@ -84,28 +87,18 @@ class SQLiteHelper {
     );
   }
 
-  Future<List<Email>> batchInsert() async {
+  Future<List<Email>> batchInsert(List<Email> emails) async {
     final db = await database;
     final batch = db.batch();
-    final Random random = Random();
-    final List<Email> userList = List.generate(
-      1000,
-      (index) => Email(
-        id: index + 1,
-        value: 'user$index@example.com',
-        categoryId: 1,
-        createdAt: DateTime.now().toString(),
-      ),
-    );
-    for (final Email user in userList) {
+    for (final Email email in emails) {
       batch.insert(
         'emails',
-        user.toMap(),
+        email.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
     await batch.commit();
-    return userList;
+    return emails;
   }
 }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mailsaver/Models/ChangeNotifier.dart';
+import 'package:provider/provider.dart';
 
 import 'Components/AddComponent.dart';
 import 'HomeScreen.dart';
@@ -14,7 +16,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: ChangeNotifierProvider(
+        create: (_) => EmailsManager(),
+        child: const HomeScreen(),
+      ),
       routes: {
         '/add': (context) => const AddComponent()
       },

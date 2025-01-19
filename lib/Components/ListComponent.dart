@@ -16,7 +16,6 @@ class _ListComponentState extends State<ListComponent> {
   @override
   void initState() {
     super.initState();
-
     WidgetsFlutterBinding.ensureInitialized();
 
     database.initDB();

@@ -15,6 +15,7 @@ dependencies:
   sqflite: ^2.3.3+1
   path_provider_windows: ^2.3.0
   sqflite_common_ffi: ^2.3.3
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

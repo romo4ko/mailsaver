@@ -1,13 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:mailsaver/Models/ChangeNotifier.dart';
 import 'package:mailsaver/Models/Email.dart';
-import 'package:provider/provider.dart';
 
 import '../Database/Database.dart';
 
 class AddComponent extends StatefulWidget {
-  const AddComponent({Key? key}) : super(key: key);
+  final Function callback;
+
+  const AddComponent({super.key, required this.callback});
 
   @override
   _AddComponentState createState() => _AddComponentState();
@@ -37,7 +37,6 @@ class _AddComponentState extends State<AddComponent> {
         )
       );
     }
-    context.read<EmailsManager>().addEmails(_emailsList);
 
     setState(() {});
   }
@@ -95,21 +94,22 @@ class _AddComponentState extends State<AddComponent> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
+                _emailsList.isNotEmpty ? ElevatedButton(
+                  onPressed: () async {
                     setState(() {
                       _validate = _emailsList.isNotEmpty;
                     });
                     if (_emailsList.isNotEmpty) {
-                      database.batchInsert(_emailsList);
+                      await database.batchInsert(_emailsList);
                       setState(() {
                         _controller.clear();
                         _emailsList.clear();
                       });
+                      widget.callback();
                     }
                   },
-                  child: const Text('Сохранить'),
-                ),
+                  child: Text('Добавить ${_emailsList.length}'),
+                ) : const SizedBox(),
               ],
             ),
           ),

@@ -16,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   bool isLeftCollapsed = false;
   bool isRightCollapsed = false;
   late AnimationController _animationController;
+  final _listWidgetKey = GlobalKey();
 
   @override
   void initState() {
@@ -41,6 +42,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       isRightCollapsed = !isRightCollapsed;
       isRightCollapsed ? _animationController.forward() : _animationController.reverse();
     });
+  }
+
+  void updateListState() {
+    final state = _listWidgetKey.currentState;
+    if (state != null) {
+      state.setState(() {});
+    }
   }
 
   @override
@@ -76,15 +84,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             width: leftWidth.toDouble(),
             duration: const Duration(milliseconds: 300),
             color: Colors.black12,
-            child: !isLeftCollapsed ? const Center(
-                child: AddComponent()
+            child: !isLeftCollapsed ? Center(
+                child: AddComponent(callback: () => updateListState())
             ) : Container(),
           ),
           Expanded(
             flex: 1,
             child: Container(
                 color: Colors.green,
-                child: const ListComponent()
+                child: ListComponent(key: _listWidgetKey)
             ),
           ),
           AnimatedContainer(

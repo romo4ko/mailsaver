@@ -23,8 +23,8 @@ class _ListComponentState extends State<ListComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<List<Email>>(
+    return Container(
+      child: FutureBuilder<List<Email>>(
         future: database.getAll(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

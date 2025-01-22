@@ -52,7 +52,6 @@ class SQLiteHelper {
 
   Future<List<Email>> getAll() async {
     final db = await database;
-
     final List<Map<String, dynamic>> maps = await db.query(
         'emails',
         orderBy: 'createdAt'
@@ -98,6 +97,7 @@ class SQLiteHelper {
       );
     }
     await batch.commit();
+
     return emails;
   }
 }
